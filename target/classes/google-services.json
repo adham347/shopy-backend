@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279975894996",
+    "project_id": "shopy-f9053",
+    "storage_bucket": "shopy-f9053.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279975894996:android:6792a67e8b255059690041",
+        "android_client_info": {
+          "package_name": "com.example.shopy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtkYgGDaCFhrvyjvcYbRA6JlFApGfeoBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
