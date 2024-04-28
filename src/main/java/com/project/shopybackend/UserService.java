@@ -14,10 +14,8 @@ public class UserService {
     private Firestore firestore;
 
     public void addUser(User user){
-        DocumentReference docRef = firestore.collection("users").document();
-        user.setId(docRef.getId());
+        DocumentReference docRef = firestore.collection("users").document(user.getId());
         ApiFuture<WriteResult> result = docRef.set(user);
-
         try {
             System.out.println("User added at: " +result.get().getUpdateTime());
         }catch (InterruptedException | ExecutionException e){
