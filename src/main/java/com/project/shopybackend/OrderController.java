@@ -1,5 +1,6 @@
 package com.project.shopybackend;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,8 @@ public class OrderController {
     @GetMapping("/user/{userId}")
     public List<Order> getOrdersByUserId(@PathVariable String userId){return orderService.getOrdersByUserId(userId);}
 
+    @GetMapping("/history/{userId}")
+    public List<Order> getOrdersHistory(@PathVariable String userId){return orderService.getOrdersHistory(userId);}
     // Update an existing order
     @PutMapping("/{orderId}")
     public void updateOrder(@PathVariable String orderId, @RequestBody Order order) {

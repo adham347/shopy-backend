@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -16,7 +17,9 @@ public class OrderService {
 
     public void addOrder(Order order){
         DocumentReference docRef = firestore.collection("orders").document();
-        order.setId(docRef.getId()); //set the product id
+        order.setId(docRef.getId());//set the product id
+        order.setDate(LocalDate.now().toString());
+        order.setStatus("preparing");
         ApiFuture<WriteResult> result = docRef.set(order); //add the product to firestore
 
         try {
@@ -46,6 +49,24 @@ public class OrderService {
         try {
             // Create a query to find orders with matching userId
             Query query = firestore.collection("orders").whereEqualTo("userId", userId);
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+            // Retrieve documents
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                orders.add(document.toObject(Order.class));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public List<Order> getOrdersHistory(String userId){
+        List<Order> orders = new ArrayList<>();
+        try {
+            // Create a query to find orders with matching userId
+            Query query = firestore.collection("orders").whereEqualTo("userId", userId)
+                    .whereEqualTo("status", "delivered");
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
             // Retrieve documents
@@ -105,6 +126,7 @@ public class OrderService {
         }
 
     }
+
 
     public void deleteOrder(String orderId){
         DocumentReference docRef = firestore.collection("orders").document(orderId);

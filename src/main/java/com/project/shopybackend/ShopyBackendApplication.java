@@ -2,6 +2,7 @@ package com.project.shopybackend;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.storage.Storage;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -25,6 +26,7 @@ public class ShopyBackendApplication {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("shopy-f9053.appspot.com")
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {
@@ -33,4 +35,5 @@ public class ShopyBackendApplication {
 
         return FirestoreClient.getFirestore();
     }
+
 }

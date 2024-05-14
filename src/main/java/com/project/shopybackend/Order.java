@@ -10,13 +10,15 @@ import java.util.List;
 public class Order {
     private String userId;
     private String id;
-    private LocalDate date;
+    private String date;
     private List<OrderProduct> orderProducts;
+    private String status;
+
+
 
     public Order(){}
 
     public Order(String id, List<OrderProduct> orderProducts, String userId) {
-        this.date = LocalDate.now();
         this.userId = userId;
         this.id = id;
         this.orderProducts = orderProducts;
@@ -38,11 +40,11 @@ public class Order {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -52,6 +54,13 @@ public class Order {
 
     public void setOrderProducts(List<OrderProduct> orderProducts) {
         this.orderProducts = orderProducts;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void addProduct(String productId, int quantity){

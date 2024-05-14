@@ -2,6 +2,7 @@ package com.project.shopybackend;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import com.google.cloud.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +19,13 @@ public class ProductService {
         DocumentReference docRef = firestore.collection("products").document();
         product.setId(docRef.getId()); //set the product id
         ApiFuture<WriteResult> result = docRef.set(product); //add the product to firestore
-
         try {
             System.out.println("Product added at: " +result.get().getUpdateTime());
         }catch (InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
     }
+
     public List<Product> getAllProducts() {
         CollectionReference productsRef = firestore.collection("products");
         ApiFuture<QuerySnapshot> querySnapshot = productsRef.get();
