@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutionException;
 public class CartService {
     @Autowired
     private Firestore firestore;
+    @Autowired
+    private OrderService orderService;
 
     public void addCart(Cart cart){
         //the cart doc id is set to be its user's id to easily get the users cars as it is a one-to-one relationship
@@ -122,6 +124,29 @@ public class CartService {
             e.printStackTrace();
         }
 
+    }
+
+    public void checkOut(String userId){
+        DocumentReference docRef = firestore.collection("carts").document(userId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+
+        try {
+            DocumentSnapshot document = future.get();
+
+            if (document.exists()) {
+                // Update the order document with the new product
+                Cart cart = document.toObject(Cart.class);
+                if (cart != null) {
+                    Order order = new Order(cart.getOrderProducts(),userId);
+                    orderService.addOrder(order);
+                    clearCart(userId);
+                }
+            } else {
+                System.out.println("No such document!");
+            }
+        } catch (InterruptedException | ExecutionException e){
+            e.printStackTrace();
+        }
     }
 
     public void deleteCart(String userId){

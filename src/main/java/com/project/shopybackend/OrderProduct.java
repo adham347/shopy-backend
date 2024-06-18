@@ -8,6 +8,9 @@ public class OrderProduct {
         this.quantity = quantity;
     }
 
+    public OrderProduct() {
+    }
+
     // Getters and setters
     public String getProductId() {
         return productId;

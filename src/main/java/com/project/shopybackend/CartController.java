@@ -26,6 +26,11 @@ public class CartController {
         cartService.addProductToCart(userId, orderProduct.getProductId(), orderProduct.getQuantity());
     }
 
+    @PutMapping("/{userId}/checkout")
+    public void checkOut(@PathVariable String userId){
+        cartService.checkOut(userId);
+    }
+
     @PutMapping("/{userId}/editproductquantity")
     public void editProductQuantity(@PathVariable String userId, @RequestBody OrderProduct orderProduct){
         cartService.editProductQuantity(userId, orderProduct.getProductId(), orderProduct.getQuantity());

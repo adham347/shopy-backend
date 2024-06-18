@@ -18,9 +18,8 @@ public class Order {
 
     public Order(){}
 
-    public Order(String id, List<OrderProduct> orderProducts, String userId) {
+    public Order(List<OrderProduct> orderProducts, String userId) {
         this.userId = userId;
-        this.id = id;
         this.orderProducts = orderProducts;
     }
 
