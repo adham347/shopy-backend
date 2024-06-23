@@ -15,7 +15,19 @@ public class CartService {
     private Firestore firestore;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ProductService productService;
 
+
+    private void calculateTotalPrice(Cart cart) {
+        cart.setTotalPrice(0);
+        for (OrderProduct orderProduct : cart.getOrderProducts()) {
+            Product product = productService.getProductById(orderProduct.getProductId());
+            if (product != null) {
+                cart.setTotalPrice(cart.getTotalPrice() + Integer.parseInt(product.getPrice()) * orderProduct.getQuantity());
+            }
+        }
+    }
     public void addCart(Cart cart){
         //the cart doc id is set to be its user's id to easily get the users cars as it is a one-to-one relationship
         DocumentReference docRef = firestore.collection("carts").document(cart.getUserId());
@@ -33,7 +45,9 @@ public class CartService {
         ApiFuture<DocumentSnapshot> document = docRef.get();
         try {
             if (document.get().exists()) {
-                return document.get().toObject(Cart.class);
+                Cart cart = document.get().toObject(Cart.class);
+                calculateTotalPrice(cart);
+                return cart;
             } else {
                 System.out.println("cart doc not found");
                 return null; // Product not found
@@ -54,9 +68,10 @@ public class CartService {
         }
     }
 
-    public void addProductToCart(String userId, String productId, int quantity){
+    public void addProductToCart(String userId,String productId, int quantity){
         DocumentReference docRef = firestore.collection("carts").document(userId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
+        Product product = productService.getProductById(productId);
 
         try {
             DocumentSnapshot document = future.get();
@@ -65,7 +80,8 @@ public class CartService {
                 // Update the order document with the new product
                 Cart cart = document.toObject(Cart.class);
                 if (cart != null) {
-                    cart.addProduct(productId, quantity); // Assuming addProduct method exists in Order class
+                    cart.addProduct(productId, quantity, product.getName(),product.getDescription(),product.getPrice(),product.getImageUrl());
+                    calculateTotalPrice(cart);
                     ApiFuture<WriteResult> writeResult = docRef.set(cart);
                     writeResult.get(); // Wait for the write to complete
                 }
@@ -90,6 +106,7 @@ public class CartService {
                 Cart cart = document.toObject(Cart.class);
                 if (cart != null) {
                     cart.editQuantity(productId, quantity); // Assuming addProduct method exists in Order class
+                    calculateTotalPrice(cart);
                     ApiFuture<WriteResult> writeResult = docRef.set(cart);
                     writeResult.get(); // Wait for the write to complete
                 }
@@ -113,6 +130,7 @@ public class CartService {
                 Cart cart = document.toObject(Cart.class);
                 if (cart != null) {
                     cart.emptyCart(); // Assuming addProduct method exists in Order class
+                    calculateTotalPrice(cart);
                     ApiFuture<WriteResult> writeResult = docRef.set(cart);
                     writeResult.get(); // Wait for the write to complete
                     System.out.println("cart cleared!");
@@ -137,7 +155,7 @@ public class CartService {
                 // Update the order document with the new product
                 Cart cart = document.toObject(Cart.class);
                 if (cart != null) {
-                    Order order = new Order(cart.getOrderProducts(),userId);
+                    Order order = new Order(cart.getOrderProducts(),userId,cart.getTotalPrice());
                     orderService.addOrder(order);
                     clearCart(userId);
                 }

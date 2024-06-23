@@ -103,31 +103,6 @@ public class OrderService {
         }
     }
 
-    public void addProductToOrder(String orderId, String productId, int quantity){
-        DocumentReference docRef = firestore.collection("orders").document(orderId);
-        ApiFuture<DocumentSnapshot> future = docRef.get();
-
-        try {
-            DocumentSnapshot document = future.get();
-
-            if (document.exists()) {
-                // Update the order document with the new product
-                Order order = document.toObject(Order.class);
-                if (order != null) {
-                    order.addProduct(productId, quantity); // Assuming addProduct method exists in Order class
-                    ApiFuture<WriteResult> writeResult = docRef.set(order);
-                    writeResult.get(); // Wait for the write to complete
-                }
-            } else {
-                System.out.println("No such document!");
-            }
-        } catch (InterruptedException | ExecutionException e){
-            e.printStackTrace();
-        }
-
-    }
-
-
     public void deleteOrder(String orderId){
         DocumentReference docRef = firestore.collection("orders").document(orderId);
         ApiFuture<WriteResult> result = docRef.delete();

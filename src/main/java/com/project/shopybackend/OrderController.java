@@ -23,10 +23,7 @@ public class OrderController {
 
     //add product to order
     @PostMapping("/{orderId}/products")
-    public ResponseEntity<String> addProductToOrder ( @PathVariable String orderId, @RequestBody OrderProduct orderProduct){
-        orderService.addProductToOrder(orderId, orderProduct.getProductId(), orderProduct.getQuantity());
-        return ResponseEntity.ok("Product added to order successfully");
-    }
+
     // Get all orders
     @GetMapping
     public List<Order> getAllOrders() {
