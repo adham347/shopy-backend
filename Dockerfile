@@ -1,4 +1,4 @@
-[16:46, 3/4/2026] Adham Ehab: # -------- Build Stage --------
+# -------- Build Stage --------
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
 
 WORKDIR /app
